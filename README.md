@@ -1,4 +1,4 @@
-# PUH assignments - Masperado
+# PUH assignments - Josip Torić
 
 Welcome to your PUH assignments repository, *Masperado*. Here's a quick intro to how things are gonna work around here.
 
