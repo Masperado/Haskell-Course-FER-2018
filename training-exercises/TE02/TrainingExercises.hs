@@ -36,37 +36,37 @@ import Data.Char
 -- a list with a single element as a result (or no elements if the key doesn't
 -- exist):
 findItem :: [(String, a)] -> String -> [(String, a)]
-findItem = undefined
+findItem xs s = [ t | t <- xs, (fst t) == s]
 
 -- ** TE 2.2
 --
 -- | Write a function that checks if a list contains an element with a certain key:
 contains :: [(String, a)] -> String -> Bool
-contains = undefined
+contains xs s = or [ (fst t) == s | t <- xs]
 
 -- ** TE 2.3
 --
 -- | Write a function that tries to retrieve a value with a certain key or throws an error if
 -- the key doesn’t exist (example of error function usage : error "I’m an error
 -- message"):
-lookup :: [(String, a)] -> String -> a
-lookup = undefined
+lookup' :: [(String, a)] -> String -> a
+lookup' xs s = if contains xs s then snd $ findItem xs s !! 0 else error "Invalid key"
 
 -- ** TE 2.4
 --
 -- | Write a function that inserts a new key value pair. If key already exists than do nothing:
-insert :: [(String, a)] -> (String, a) -> [(String, a)]
-insert = undefined
+insert' :: [(String, a)] -> (String, a) -> [(String, a)]
+insert' xs t = if not (contains xs $ fst t) then (t:xs) else xs
 
 -- ** TE 2.5
 --
 -- | Write a function that removes a key value pair with the certain key:
-remove :: [(String, a)] -> String -> [(String, a)]
-remove = undefined
+remove' :: [(String, a)] -> String -> [(String, a)]
+remove' xs s = [ t | t <- xs, (fst t) /= s]
 
 -- ** TE 2.6
 --
 -- | Write a function that updates the value of a certain key (if the key doesn’t exist,
 -- the function does nothing) :
-update :: [(String, a)] -> String -> a -> [(String, a)]
-update = undefined
+update' :: [(String, a)] -> String -> a -> [(String, a)]
+update' xs s v = if contains xs s then insert' (remove' xs s) (s, v) else xs
