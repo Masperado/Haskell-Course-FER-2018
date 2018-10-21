@@ -92,27 +92,26 @@ main = hspec $ do
     ([(0, 0), (-1, 1), (1, -1), (2, -2), (-2, 2), (3, 12)], [0, 0, 0, 0, 0, 15])
     ]
 
-  --  Extra Exercises; uncomment the following lines if you've done extra exercises:
-  --  describe "TE 1.1.4" $ mapM_
-  --    ( tester2 "te114" te114 )
-  --    [(1, 1, 2), (0, 1, 1), (-3, 5, -14), (3, -5, -14), (-3, -5, 16), (3, 5, 16), (7, 11, 78),
-  --    (10, 11, 56), (5, 4, 11), (4, 5, 11),(-2, 13, -12), (-4, -5, 11), (-4, 5, -9), (4, -5, -9),
-  --    (4, 6, 13), (-4, -6, 13), (4, -6, -11), (-4, 6, -11)
-  --    ]
-  --
-  --  describe "TE 1.2.4" $ mapM_
-  --    ( tester "te124" te124 )
-  --    [("palindrome", "palindrome"), ("longlong", "longlong"), ("sharederah", "sharederah"),
-  --    ("longgnol", "long"), ("sharederahs", "share"), ("anavolimilovana", "anavoli"),
-  --    ("palindrome sentence ecnetnes emordnilap", "palindrome sentence")
-  --    ]
-  --
-  --  describe "TE 1.3.4" $ mapM_
-  --    ( tester "te134" te134 )
-  --    [(("This sentence contains some words", "This is another sentence"), ["This", "sentence"]),
-  --    (("What about the droid attack on the wookies", "It's a system we cannot afford to lose"), []),
-  --    (("All words are common", "All words are common"), ["All", "words", "are", "common"])
-  --    ]
+   describe "TE 1.1.4" $ mapM_
+     ( tester2 "te114" te114 )
+     [(1, 1, 2), (0, 1, 1), (-3, 5, -14), (3, -5, -14), (-3, -5, 16), (3, 5, 16), (7, 11, 78),
+     (10, 11, 56), (5, 4, 11), (4, 5, 11),(-2, 13, -12), (-4, -5, 11), (-4, 5, -9), (4, -5, -9),
+     (4, 6, 13), (-4, -6, 13), (4, -6, -11), (-4, 6, -11)
+     ]
+
+   describe "TE 1.2.4" $ mapM_
+     ( tester "te124" te124 )
+     [("palindrome", "palindrome"), ("longlong", "longlong"), ("sharederah", "sharederah"),
+     ("longgnol", "long"), ("sharederahs", "share"), ("anavolimilovana", "anavoli"),
+     ("palindrome sentence ecnetnes emordnilap", "palindrome sentence")
+     ]
+
+   describe "TE 1.3.4" $ mapM_
+     ( tester "te134" te134 )
+     [(("This sentence contains some words", "This is another sentence"), ["This", "sentence"]),
+     (("What about the droid attack on the wookies", "It's a system we cannot afford to lose"), []),
+     (("All words are common", "All words are common"), ["All", "words", "are", "common"])
+     ]
 
   where
     tester0 fname f (x) =
