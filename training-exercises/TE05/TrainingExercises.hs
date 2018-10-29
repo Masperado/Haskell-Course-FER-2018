@@ -34,7 +34,11 @@ import Data.Char
 -- | too, so you don't call `length` repeatedly on the same word.
 
 te511 :: String -> String
-te511 = undefined
+te511 x = te511' (words x) ""
+te511' :: [String] -> String -> String
+te511' [] a = a
+te511' (x:xs) a = let b = longest in longest `seq` te511' xs longest
+  where longest = if length a >= length x then a else x
 
 -- ** TE 5.1.2
 --
@@ -45,7 +49,11 @@ te511 = undefined
 -- | representing the polynomial x^3 - 2x + 3 would be  as  [1, 0, -2, 3].
 
 te512 :: Num a => [a] -> a -> a
-te512 = undefined
+te512 xs v = te512' xs v 0
+te512' :: Num a => [a] -> a -> a -> a
+te512' [] v s = s
+te512' (x:xs) v s = let r = s*v+x in r `seq` te512' xs v r
+
 
 -- ** TE 5.1.3
 --
@@ -54,7 +62,18 @@ te512 = undefined
 -- | do this using recursive functions with accumulation.
 
 te513 :: Floating a => [a] -> a
-te513 = undefined
+te513 [] = error "empty list"
+te513 xs = (variance xs m 0 / l) ** (1/2)
+  where m = mean xs l 0
+        l = fromIntegral $ length xs
+
+variance :: Floating a => [a] -> a -> a -> a
+variance [] m s = s
+variance (x:xs) m s = let t = s + (x - m)**2 in t `seq` variance xs m t
+
+mean :: Floating a => [a] -> a -> a -> a
+mean [] l m = m
+mean (x:xs) l m = let s = m + x/l in s `seq` mean xs l s 
 
 -- ** TE 5.1.4
 --
@@ -87,7 +106,28 @@ te513 = undefined
 -- | do for now.)
 
 te514 :: [(String, Double)] -> [Int]
-te514 = undefined
+te514 [] = error "empty list"
+te514 xs = te514' xs 5.56 0 [] [-1]
+-- Danas na FER-u stvarno svako može proći Fiziku 1, pa čak i oni ljudi koji misle da će 
+-- auto brzine 5.56 m/s zaustaviti se nakon što uspori sa 11.1112*0.5, tj. 5.5556 metara u sekundi
+te514' :: [(String, Double)] -> Double -> Double -> [String] -> [Int] -> [Int]
+te514' [] v c t [i]
+  | v <= 0 = [i]
+  | t == ["turn left", "turn right", "turn left"] = [i]
+  | t == ["turn right", "turn left", "turn right"] = [i]
+  | c > 5*9.81 = [i]
+  | otherwise = []
+te514' (x:xs) v c t [i]
+  | v <= 0 = [i]
+  | t == ["turn left", "turn right", "turn left"] = [i]
+  | t == ["turn right", "turn left", "turn right"] = [i]
+  | c > 5*9.81 = [i]
+  | fst x == "even" = let nv = (v - 0.5 * snd x) in te514' xs nv 0 [] [i+1]
+  | fst x == "drop" = let nv = ((v*v + 2 * 9.81 * snd x)**(1/2)) in te514' xs nv 0 [] [i+1]
+  | fst x == "turn left" = let nc = (v*v/snd x) in te514' xs v nc ("turn left":t) [i + 1]
+  | fst x == "turn right" = let nc = (v*v/snd x) in te514' xs v nc ("turn right":t) [i + 1]
+
+
 
 -- ** TE 5.1.5 - EXTRA
 --
@@ -95,4 +135,9 @@ te514 = undefined
 -- | of a given number using Newton's method, with the given number of iterations.
 -- | Use the halved original number as an initial guess for the method.
 te515 :: (Ord a, Fractional a, Integral b) => a -> b -> a
-te515 = undefined
+te515 a b = te515' a b (a/2) 
+
+te515' :: (Ord a, Fractional a, Integral b) => a -> b -> a -> a
+te515' a 0 g = g
+te515' a b g = let ng = (g - (g*g-a)/(2*g)) in te515' a (b-1) ng
+

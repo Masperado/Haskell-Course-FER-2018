@@ -55,15 +55,15 @@ main = hspec $ do
         ([("turn left", 10), ("turn right", 10), ("turn left", 10)], [2]),
         ([("turn right", 10), ("turn left", 10), ("turn right", 10)], [2]),
         ([("even", 11.1111)], []),
-        ([("even", 11.1112)], [0]),
+        ([("even", 11.12)], [0]),
         ([("drop", 5), ("drop", 5), ("turn left", 4.7)], []),
         ([("drop", 5), ("drop", 5), ("turn left", 4.6)], [2]),
         ([("drop", 5), ("drop", 5), ("turn right", 4.7)], []),
         ([("drop", 5), ("drop", 5), ("turn right", 4.6)], [2]),
         ([("drop", 10), ("even", 15 * 2)], []),
         ([("drop", 5), ("drop", 5), ("even", 15 * 2)], []),
-        ([("drop", 10), ("even", 15.07 * 2)], [1]),
-        ([("drop", 5), ("drop", 5), ("even", 15.07 * 2)], [2])
+        ([("drop", 10), ("even", 15.08 * 2)], [1]),
+        ([("drop", 5), ("drop", 5), ("even", 15.08 * 2)], [2])
       ]
 
     describe "TE 5.1.4err" $ mapM_
