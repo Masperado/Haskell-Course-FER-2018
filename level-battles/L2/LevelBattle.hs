@@ -72,7 +72,13 @@ import Data.Char
 
 
 lb21 :: Eq a => [a] -> [a]
-lb21 = undefined
+lb21 xs = lb21' (reverse xs) []
+
+lb21' :: Eq a => [a] -> [a] -> [a]
+lb21' [] rs = rs
+lb21' (x:xs) [] = lb21' xs [x]
+lb21' (x:xs) rc@(r:rs) = if x==r then lb21' xs rc else lb21' xs (x:rc)
+
 
 -- ** L 2.2
 --
@@ -82,7 +88,11 @@ lb21 = undefined
 -- lb22 3 [1, 3, 5, 1, 3] = 1
 
 lb22 :: Eq a => a -> [a] -> Int
-lb22 = undefined
+lb22 s xs = lb22' s xs 0
+
+lb22' :: Eq a => a -> [a] -> Int -> Int
+lb22' s [] _ = -1
+lb22' s (x:xs) i = if s==x then i else lb22' s xs (i+1)
 
 -- ** L 2.3
 --
@@ -91,7 +101,12 @@ lb22 = undefined
 -- about negative numbers)
 
 lb23 :: Int -> Int -> Int
-lb23 = undefined
+lb23 a b = lb23' a b 0
+
+lb23' :: Int -> Int -> Int -> Int
+lb23' a 0 s = s
+lb23' a b s = lb23' a (b-1) (s+a)
+
 
 -- ** L 2.4
 --
@@ -104,4 +119,14 @@ lb23 = undefined
 -- In the case of an empty list, return an empty list.
 
 lb24 :: [Double] -> [[Double]]
-lb24 = undefined
+lb24 [] = []
+lb24 xs = lb24' xs [xs]
+
+lb24' :: [Double] -> [[Double]] -> [[Double]]
+lb24' [x] s  = reverse s
+lb24' xs s = lb24' t (t:s)
+    where t = triangle xs []
+
+triangle :: [Double] -> [Double] -> [Double]
+triangle [x] s = reverse s
+triangle (x:y:xs) s = triangle (y:xs) ((x+y):s)
