@@ -324,6 +324,7 @@ Write the following functions using 'map'.
 - listifylist :: [a] -> [[a]]
   listifylist [1,2,3] => [[1],[2],[3]]
 
+> listifylist :: [a] -> [[a]]
 > listifylist=map(:[])
 
 3.2.
@@ -332,7 +333,8 @@ Write the following functions using 'map'.
   cutoff :: Int -> [Int] -> [Int]
   cutoff 100 [20,202,34,117] => [20,100,34,100]
 
-> cutOff n=map(min n)
+> cutoff :: Int -> [Int] -> [Int]
+> cutoff n = map(min n)
 
 
 === FILTER ====================================================================
@@ -379,7 +381,7 @@ Define the following functions using 'map' and 'filter':
   sumEvenSquares [1,2,3,4] => 20
 
 > sumEvenSquares :: [Integer] -> Integer
-> sumEvenSquares s = sum $ map (^2) $ filter (even) s 
+> sumEvenSquares s = sum $ map (^2) $ filter (even) s
 
 4.2.
 - Function 'freq x xs' that counts how many times element 'x' occurs in list
@@ -387,11 +389,18 @@ Define the following functions using 'map' and 'filter':
   freq :: Eq a => a -> [a] -> Int
   freq 'k' "kikiriki" => 3
 
+> freq :: Eq a => a -> [a] -> Int
+> freq x xs = length $ filter (x==) xs
+
 4.3.
 - Function 'freqFilter n' that filters all elements that occur at least 'n'
   times in a list.
   freqFilter :: Eq a => Int -> [a] -> [a]
   freqFilter 4 "kikiriki" => "iiii"
+
+> freqFilter :: Eq a => Int -> [a] -> [a]
+> freqFilter n xs = filter (freqvMT3) xs
+>   where freqvMT3 x = ( length $ filter (x==) xs ) >= n
 
 === LAMBDA EXPRESSIONS ========================================================
 
@@ -485,7 +494,8 @@ Define the following functions using lambda expressions:
 - Define a function 'withinInterval n m xs' that filters from list 'xs' all
   elements that fall within the [n,m] interval.
 
-> withinInterval n m xs = filter (\x -> x>=n && x<=m) xs
+> withinInterval :: Ord a => a -> a -> [a] -> [a]
+> withinInterval n m = filter (\x -> x>=n && x<=m)
 
 5.2.
 - Define 'sndColumn m' that returns the second column of matrix 'm',
@@ -493,6 +503,7 @@ Define the following functions using lambda expressions:
   sndColumn [[a]] -> [a]
   sndColumn [[1,2,3],[4,5,6]] => [2,5]
 
+> sndColumn :: [[a]] -> [a]
 > sndColumn = map (\(_:y:_) -> y)
 
 5.3.
@@ -503,7 +514,8 @@ Define the following functions using lambda expressions:
   canonicalizePairs :: Ord a => [(a, a)] -> [(a, a)]
   canonicalizePairs [(4,1),(2,2),(1,5)] => [(1,4),(1,5)]
 
-> canoinicalizePairs = map (\(x,y) -> (min x y, max x y)) $ filter (\(x,y) -> x==y)
+> canonicalizePairs :: Ord a => [(a, a)] -> [(a, a)]
+> canonicalizePairs xs = map (\(x,y) -> (min x y, max x y)) $ filter (\(x,y) -> x/=y) xs
 
 === NEXT =====================================================================
 
