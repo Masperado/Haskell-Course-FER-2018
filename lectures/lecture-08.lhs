@@ -150,6 +150,7 @@ of course use local definitions):
   sumEven :: [Integer] -> Integer
   sumEven [1..10] => 25
 
+> sumEven :: [Integer] -> Integer
 > sumEven = sum . map snd . filter (even . fst) . zip [0..]
 
 1.2.
@@ -157,6 +158,7 @@ of course use local definitions):
   in the list 'ws'.
   filterWords :: [String] -> String -> String
 
+> filterWords :: [String] -> String -> String
 > filterWords ws = unwords . filter (`notElem` ws) . words
 
 1.3.
@@ -166,7 +168,10 @@ of course use local definitions):
   satisfy the predicate 'p'.
   initials3 :: String -> (String -> Bool) -> String -> String
   initials3 "." (/="that") "a company that makes everything" => "A.C.M.E."
-- Use this function to define the 'initials' function.
+- Use this function to define the 'initials' function
+
+> initials3 :: String -> (String -> Bool) -> String -> String
+> initials3 a p = concatMap ((:a) . toUpper . head ) . filter (p) . words
 
 === FUNCTIONS USEFUL FOR COMPOSITION ==========================================
 
@@ -238,12 +243,25 @@ be able to refer to it later.
   maxDiff [1,2,3,5,1] => 4
 - Define 'maxMinDiff' that returns the pair (min_difference, max_difference).
 
+> maxDiff :: [Int] -> Int
 > maxDiff xs@(_:ys) = maximum . map (abs . uncurry (-)) $ zip xs ys
+
+> minDiff :: [Int] -> Int
+> minDiff xs@(_:ys) = minimum . map (abs . uncurry (-)) $ zip xs ys
+
+> minMaxDiff :: [Int] -> (Int, Int)
+> minMaxDiff xs = (minDiff xs, maxDiff xs)
+
 
 2.2.
 - Define 'studentsPassed' that takes as input a list [(NameSurname,Score)] and
   returns the names of all students who scored at least 50% of the maximum 
   score.
+
+> studentsPassed :: (Ord b, Fractional b) => [(a,b)] -> [a]
+> studentsPassed xs = map fst $ filter (passed) xs
+>   where passed x = (snd x) > (maxScore/2)
+>         maxScore = maximum $ map snd xs
 
 === USEFUL HIGHER-ORDER FUNCTIONS =============================================
 
@@ -293,20 +311,33 @@ From 'Data.Function':
   isTitleCased :: String -> Bool
   isTitleCased "University Of Zagreb" => True
 
+> isTitleCased :: String -> Bool
+> isTitleCased = all (`elem` ['A'..'Z']) . map (head) . words
+
 3.2.
 - Define 'sortPairs' that sorts the list of pairs in ascending order with
   respect to the second element of a pair.
+
+> sortPairs :: Ord a => [(b,a)] -> [(b,a)]
+> sortPairs = sortBy (\(_,a) (_,b) -> compare a b)
 
 3.3.
 - Define 'filename' that extracts the the name of the file from a file path.
   filename :: String -> String
   filename "/etc/init/cron.conf" => "cron.conf"
 
+> filename :: String -> String
+> filename = reverse . takeWhile (\a -> a/= '/') . reverse
+
 3.4.
 - Define 'maxElemIndices' that returns the indices of the maximum element in a
   list. Return "empty list" error if the list is empty.
   maxElemIndices :: Ord a => [a] -> [Int]
   maxElemIndices [1,3,4,1,3,4] => [2,5]
+
+> maxElemIndices :: Ord a => [a] -> [Int]
+> maxElemIndices [] = error "empty list"
+> maxElemIndices xs = findIndices (== maximum xs) xs
 
 === FOLD ======================================================================
 
@@ -417,16 +448,23 @@ We can now define:
 4.1. 
 - Define 'elem' using 'foldr'.
 
-> elem41 x xs = foldr (\(x,y) ->  x || y) (==) False 
+> elem41 :: Eq a => a -> [a] -> Bool
+> elem41 e = foldr (\x acc ->  (x==e) || acc) False 
 
 4.2.
 - Define 'reverse' using 'foldr'.
+
+> reverse42 :: [a] -> [a]
+> reverse42 = foldr (\x acc -> acc ++ [x]) []
 
 4.3.
 - Using 'foldr' define 'nubRuns' that removes consecutively repeated elements
   from a list.
   nubRuns :: Eq a => [a] -> [a]
   nubRuns "Mississippi" => "Misisipi"
+
+> nubRuns :: Eq a => [a] -> [a]
+> nubRuns = foldr (\x acc -> if (length acc == 0 || (x /= head acc)) then x:acc else acc ) []
 
 ===============================================================================
 
@@ -505,8 +543,14 @@ current maximum, 'n' is the position counter, and 'is' is the list of indices.
 - Write 'reverse' using 'foldl'.
   reverse' :: [a] -> [a]
 
+> reverse' :: [a] -> [a]
+> reverse' = foldl (\acc x -> x:acc) []
+
 5.2.
 - Using 'foldl' define function 'sumEven' from problem 1.1.
+
+> sumEven52 :: [Integer] -> Integer
+> sumEven52 = foldl (\acc x -> if (even x) then x + acc else acc) 0
 
 5.3.
 - Using 'foldl' define maxUnzip :: [(Int,Int)] -> (Int,Int) 
@@ -516,6 +560,10 @@ current maximum, 'n' is the position counter, and 'is' is the list of indices.
     maxUnzip zs = (maximum xs, maximum ys)
       where (xs,ys) = unzip zs
   Return "empty list" error if the list is empty.
+
+> maxUnzip :: [(Int,Int)] -> (Int,Int) 
+> maxUnzip [] = error "empty list"
+> maxUnzip xs = foldl1 (\(xa,ya) (x,y) -> (max xa x, max ya y)) xs
 
 == REMARKS ====================================================================
 
