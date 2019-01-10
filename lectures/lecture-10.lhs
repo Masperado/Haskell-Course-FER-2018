@@ -21,7 +21,7 @@ v1.1
 Last week we introduced the 'data' keyword for defining custom data types:
 algebraic data types, records, and polymorphic data types. Today we extend on
 this and look into recursive data types. In particular, we look into
-polymorphic recursive types, such as lists and trees, which are important
+polymorphic recursive types, such as lists and trees, which are import ant
 because they serve as data containers.
 
 === RECURSIVE DATA STRUCTURES ================================================

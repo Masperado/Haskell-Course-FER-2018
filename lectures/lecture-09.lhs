@@ -431,10 +431,10 @@ We return 'Right b' is there was no error, otherwise we return 'Left a', where
   toTriplet :: MyTriplet a b c -> (a, b, c)
   that converts a 'MyTriplet' value into an ordinary triplet.
 
-> data MyTriplet a b c = MyTriplet a b c deriving Show
+-- > data MyTriplet a b c = MyTriplet a b c deriving Show
 
-> toTriplet :: MyTriplet a b c -> (a, b, c)
-> toTriplet MyTriplet(x,y,z) = (x, y, z)
+-- > toTriplet :: MyTriplet a b c -> (a, b, c)
+-- > toTriplet MyTriplet(x,y,z) = (x, y, z)
 
 3.2.
 - Define a function (Employee - salary :: Maybe Double, name :: String) deriving Show

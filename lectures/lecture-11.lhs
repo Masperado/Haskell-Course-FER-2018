@@ -16,7 +16,8 @@ v1.0
 > import Data.Char
 > import Data.Functor
 > import Data.Foldable
-> import Prelude hiding (foldr,foldl,foldr1)
+> import Data.Ord 
+> import Prelude hiding (foldr,foldl,foldr1) 
 > import qualified Data.Set as S
 > import qualified Data.Map as M
 > import qualified Data.Tree as T
@@ -105,6 +106,10 @@ We can apply this to any value of a type from the 'Ageing' class.
   that compares the ages relative to the maximum age, so that, say, a 10-year
   old dog is considered older than a 20-year old human.
 
+> compareRelativeAge :: (Ageing a, Ageing b) => a -> b -> Ordering 
+> compareRelativeAge a b = compare (ageFunction a) (ageFunction b)
+>   where ageFunction x = currentAge x `div` maxAge x
+
 1.2.
 - Define a class 'Nameable' with function
     name :: a -> String
@@ -172,6 +177,7 @@ The same holds for our binary tree:
 - Define '[]' and 'Tree' as instances of 'Takeable'. Take elements from the
   tree using in-order traversal.
 
+
 2.2.
 - Define a 'Headed' class with functions
     headOf  :: t a -> a      -- takes the head of the structure
@@ -235,6 +241,9 @@ but the latter is used more often.
     tr = Node (Just 1) (Node (Just 2) Null Null) (Node Nothing Null Null)
     mapOnTreeMaybe (+1) tr =>
     Node (Just 2) (Node (Just 3) Null Null) (Node Nothing Null Null)
+
+> mapOnTreeMaybe :: (a -> b) -> Tree (Maybe a) -> Tree (Maybe b)
+> mapOnTreeMaybe f = fmap (fmap f)
   
 3.2.
 - Define a 'RoseTree' type for trees in which each node can have a number of
@@ -327,6 +336,9 @@ Even better than that, we can apply any of the following functions from
 - Using 'foldr' from 'Foldable' class define a function
     sumPositive :: (Foldable t, Num a, Ord a) => t a -> a
   that sums the positive elements in a structure of a 't a' type.
+
+-- > sumPositive :: (Foldable t, Num a, Ord a) => t a -> a
+-- > sumPositive xs = sum . filter(>0) . foldr (:) []
 
 4.2.
 - Using 'foldr' define a function 'size' that returns the size of any structure
