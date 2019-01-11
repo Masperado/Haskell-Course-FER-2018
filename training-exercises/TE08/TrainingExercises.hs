@@ -106,7 +106,7 @@ te824 = foldr (\x acc -> acc + net x) 0
 -- -> Example: [Outgoing 10, Incoming 15, Incoming 3] ==> False
 
 te825 :: [Transaction] -> Bool
-te825 = and . map (>=0) . foldl (\acc x -> (head acc + net x) : acc) [0]
+te825 = all (>= 0) . foldl (\ acc x -> (head acc + net x) : acc) [0]
   where net (Incoming value) = value
         net (Outgoing value) = - value
 
