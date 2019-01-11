@@ -48,7 +48,7 @@ module LevelBattle where
   HINT: We are basically defining a linked list.
 -}
 
-data N
+data N = Z | S N
 
 {- * DERIVING & DEFINING TYPECLASS INSTANCES -}
 
@@ -78,20 +78,47 @@ data N
   use pattern matching just as easily.
 -}
 
+instance Eq N where
+  n1 == n2 = equal n1 n2
+    where equal Z Z           = True
+          equal Z _           = False
+          equal _ Z           = False
+          equal (S n1) (S n2) = equal n1 n2
+
 instance Num N where
-  n1 + n2     = undefined
-  n1 - n2     = undefined
-  n1 * n2     = undefined
-  abs         = undefined
-  signum      = undefined
-  fromInteger = undefined
+  n1 + n2     = sum n1 n2
+    where sum Z Z           = Z
+          sum x Z           = x
+          sum Z x           = x
+          sum (S n1) (S n2) = S (S (sum n1 n2))
+  n1 - n2     = minus n1 n2
+    where minus Z Z           = Z
+          minus x Z           = x
+          minus Z x           = error "Negative number"
+          minus (S n1) (S n2) = minus n1 n2
+  n1 * n2     = product n1 n2
+    where product Z _ = Z
+          product _ Z = Z
+          product n1 (S n2) = n1 + (n1 * n2) 
+  abs n       = n
+  signum n
+    | n == Z       = 0
+    | otherwise    = 1
+  fromInteger n
+    | n < 0     = error "Negative number" 
+    | n == 0    = Z
+    | otherwise = S (fromInteger (n-1)::N)
 
 instance Enum N where
-  toEnum   = undefined
-  fromEnum = undefined
+  toEnum = fromInteger . fromIntegral
+  fromEnum = toInt
 
 instance Show N where
-  show = undefined
+  show = show . toInt
+
+toInt :: N -> Int
+toInt Z = 0
+toInt (S n) = 1 + toInt n
 
 {- * RECORDS, PARAMETERISED TYPES, MAYBE TYPE, FMAP -}
 
@@ -113,7 +140,7 @@ instance Show N where
   converts / "lifts" a function 'a -> b' into 'f a -> f b'.
 -}
 
-data Ingredient
+data Ingredient a = Ingredient { name :: String, amount :: Maybe a } deriving (Show)
 
 convert :: ( a -> b ) -> Ingredient a -> Ingredient b
-convert = undefined
+convert f ingredient = Ingredient (name ingredient) (fmap f (amount ingredient))
