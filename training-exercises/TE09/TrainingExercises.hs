@@ -31,7 +31,7 @@ import Data.Ord
 --
 -- Make sure to derive `Show` and `Eq`.
 --
-data Pair a b
+data Pair a b = Pair a b deriving (Show,Eq)
 
 -- ** TE 9.1.2
 --
@@ -40,7 +40,7 @@ data Pair a b
 -- -> Example: Pair 1 'a' ==> 1
 
 te912 :: Pair a b -> a
-te912 = undefined
+te912 (Pair x _) = x
 
 -- ** TE 9.1.3
 --
@@ -49,7 +49,7 @@ te912 = undefined
 -- -> Example: Pair 1 'a' ==> 'a'
 
 te913 :: Pair a b -> b
-te913 = undefined
+te913 (Pair _ x) = x
 
 -- ** TE 9.1.4
 --
@@ -58,7 +58,7 @@ te913 = undefined
 -- -> Example: Pair 1 'a' ==> Pair 'a' 1
 
 te914 :: Pair a b -> Pair b a
-te914 = undefined
+te914 (Pair x y) = Pair y x
 
 -- ** TE 9.1.5
 --
@@ -69,7 +69,7 @@ te914 = undefined
 -- -> Example: [Pair 1 'a', Pair 4 'c'] inc toupper ==> [Pair 2 'A', Pair 5 'C']
 
 te915 :: [Pair a b] -> (a -> a) -> (b -> b) -> [Pair a b]
-te915 = undefined
+te915 pairs f1 f2 = map (\(Pair a b) -> (Pair (f1 a) (f2 b))) pairs
 
 {- * 9.2 Maybe Type  -}
 
@@ -137,7 +137,7 @@ data Tree a = Nil
 -- -> Example: Node 1 (Node 2 Nil Nil) (Node 4 Nil Nil) ==> 7
 
 te942 :: Num a => Tree a -> a
-te942 undefined
+te942 = undefined
 
 -- ** TE 9.4.3
 --

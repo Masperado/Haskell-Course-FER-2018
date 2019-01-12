@@ -144,7 +144,7 @@ won't work for all list types (why this is so will be clear after Lecture 3).
   as input and returns a string consisting of person's initials.
   initials "James" "Bond" => "J. B."
 
-> initials s1 s2 = [head s1] ++ ". " ++ [head s2] ++"."
+> initials s1 s2 = [head s1] ++ ". " ++ [head s2] ++ "."
 
 1.3.
 - Define a function that concatenates two strings, so that the longest string
