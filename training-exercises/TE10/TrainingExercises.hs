@@ -41,7 +41,10 @@ data MyList a = Empty | Cons a (MyList a) deriving Show
 -- equal if they have the same elements regardless of their order.
 -- Hint: think about a helper function that could help you here.
 
--- TODO instance ...
+instance (Eq a, Ord a) => Eq (MyList a) where
+  l1 == l2 = sort (flatten l1) == sort (flatten l2)
+    where flatten Empty = []
+          flatten (Cons x l) = x : flatten l 
 
 -- ** TE 10.1.2
 
@@ -57,11 +60,13 @@ data ChristmasTree a = Ornament
 -- all elements in their in-order traversal.
 
 treeToList :: ChristmasTree a -> [a]
-treeToList = undefined
+treeToList Ornament = []
+treeToList (Light a left right) = treeToList left ++ a:treeToList right
 
 -- ** TE 10.1.3
 -- Let's say that two trees are equal if they contain the same elements
 -- regardless of their order. Define an 'Eq' instance for the ChristmasTree type
 -- that implements that notion of equality.
 
--- TODO instance ...
+instance (Eq a, Ord a) => Eq (ChristmasTree a) where
+  t1 == t2 = sort (treeToList t1) == sort (treeToList t2)
