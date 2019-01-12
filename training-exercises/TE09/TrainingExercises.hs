@@ -83,7 +83,8 @@ te915 pairs f1 f2 = map (\(Pair a b) -> (Pair (f1 a) (f2 b))) pairs
 -- -> Example: 0 Nothing         ==> 0
 
 te921 :: a -> Maybe a -> a
-te921 = undefined
+te921 _ (Just x) = x
+te921 x Nothing = x
 
 -- ** TE 9.2.2
 --
@@ -96,7 +97,9 @@ te921 = undefined
 -- -> Example: [Just True, Just True, Nothing]   ==> False
 
 te922 :: [Maybe Bool] -> Bool
-te922 = undefined
+te922 = foldr evaluate True
+  where evaluate (Just x) acc = x && acc
+        evaluate Nothing acc  = False
 
 
 {- * 9.3 Fmap  -}
@@ -116,7 +119,10 @@ te922 = undefined
 -- -> Example: [Just True, Just False, Nothing]   ==> [Just 5, Just 1, Nothing]
 
 te931 :: [Maybe Bool] -> [Maybe Int]
-te931 = undefined
+te931 = fmap boolToInt
+  where boolToInt (Just True) = Just 5
+        boolToInt (Just False) = Just 1
+        boolToInt Nothing = Nothing
 
 {- * 9.4 Recursive Data Structures  -}
 
@@ -137,7 +143,8 @@ data Tree a = Nil
 -- -> Example: Node 1 (Node 2 Nil Nil) (Node 4 Nil Nil) ==> 7
 
 te942 :: Num a => Tree a -> a
-te942 = undefined
+te942 Nil = 0
+te942 (Node value left right) = value + te942 left + te942 right 
 
 -- ** TE 9.4.3
 --
@@ -145,6 +152,6 @@ te942 = undefined
 --
 -- -> Example: Node 1 (Node 2 Nil Nil) (Node 4 Nil Nil) ==> Just 4
 
--- (>) :: Ord a => a -> a -> Bool
 te943 :: Ord a => Tree a -> Maybe a
-te943 = undefined
+te943 Nil = Nothing
+te943 (Node value left right) = maximum [Just value, te943 left, te943 right]
