@@ -22,10 +22,11 @@ module TrainingExercises where
 --
 import Data.Char
 import Data.List
-import Data.Ord
+import Data.Ord 
 import qualified Data.Set as S
 import qualified Data.Map as M
 import System.Random
+import Control.Monad
 --
 
 {- * 11.1 Recursive data types and type class instances  -}
@@ -37,7 +38,7 @@ import System.Random
 -- Example: product' [4, 0, 3, -9, 1] => 12
 
 product' :: (Foldable t, Num a, Ord a) => t a -> a
-product' = undefined
+product' = foldl (\acc x -> if (x>0) then x*acc else acc) 1
 
 
 {- 11.2 Standard data types -}
@@ -53,8 +54,11 @@ product' = undefined
 -- Example: firstDup [5, 2, 3, 5] = 3
 
 firstDup :: Ord a => [a] -> Int
-firstDup = undefined
+firstDup xs = firstDupHelp (zip [0..] xs) (S.fromList [])
 
+firstDupHelp :: Ord a => [(Int,a)] -> S.Set a -> Int
+firstDupHelp [] set = -1
+firstDupHelp (x:xs) set = if (S.member (snd x) set) then fst x else firstDupHelp xs (S.insert (snd x) set)  
 
 -- ** TE 11.2.2
 
@@ -65,7 +69,10 @@ firstDup = undefined
 --          isPermutation [5, 2, 3] [5, 3, 3] = False
 
 isPermutation :: Ord a => [a] -> [a] -> Bool
-isPermutation = undefined
+isPermutation xs ys = if length xs == length ys then checkPerm xs ys else False
+  
+checkPerm :: Ord a => [a] -> [a] -> Bool
+checkPerm xs ys = length xs == length (M.toList $ M.fromList (zip (xs++ys) [0..]))
 
 {- 11.3 IO and random -}
 
@@ -83,7 +90,15 @@ isPermutation = undefined
 -- Stdout: goodbye
 
 firstDupIO :: IO ()
-firstDupIO = undefined
+firstDupIO = do
+  helpFunction []
+  putStrLn "Goodbye"
+
+helpFunction :: [Int] -> IO [Int]
+helpFunction acc = do
+  input <- getLine
+  let number = read input
+  if number `elem` acc then return [] else helpFunction (number:acc)
 
 -- ** TE 11.3.2
 
@@ -108,4 +123,10 @@ firstDupIO = undefined
 -- (all of these are completely random!)
 
 userRandomIO :: IO ()
-userRandomIO = undefined
+userRandomIO = do
+  input <- getLine
+  let number = read input
+  g <- getStdGen
+  let numbers = randoms g :: [Int]
+  forM_ [1..number] $ \x -> do
+    putStrLn $ show (numbers !! x)
