@@ -38,13 +38,16 @@ import qualified System.Random as R
 
 data Person = Person { personId :: Int, name :: String, number :: Int} deriving (Show, Eq)
 data SlightlyMoreLuckyPerson = SlightlyMoreLuckyPerson { luckyName :: String } deriving Show
-  
--- class Winnable a where
 
--- instance Winnable Person where
 
--- instance Winnable SlightlyMoreLuckyPerson where
+class Winnable a where
+  isWinner :: a -> Bool
 
+instance Winnable Person where
+  isWinner p = number p == 3
+
+instance Winnable SlightlyMoreLuckyPerson where
+  isWinner p = (length (luckyName p)) > 3
 
 {- ** LB 5.2 -}
 
@@ -67,9 +70,15 @@ data SlightlyMoreLuckyPerson = SlightlyMoreLuckyPerson { luckyName :: String } d
 -}
 
 parseSsv :: String -> [String]
-parseSsv s = undefined
+parseSsv = split ';'
 
--- instance Read Person where
+split :: Eq a => a -> [a] -> [[a]]
+split d [] = []
+split d s = x : split d (drop 1 y) where (x,y) = span (/= d) s
+
+instance Read Person where
+  readsPrec n str = [(Person (read (input !! 0)) (input !! 1) (read (input !! 2)) , "")]
+    where input = parseSsv str
 
 
 {- ** LB 5.3 -}
@@ -85,7 +94,14 @@ parseSsv s = undefined
 -}
 
 getsPeople :: FilePath -> IO (Map Int Person)
-getsPeople path = undefined
+getsPeople path = do
+  s <- readFile path
+  let l = lines s
+  let p = map (personToKv . read) l
+  return $ M.fromList p
+
+personToKv :: Person -> (Int, Person)
+personToKv p = (personId p, p)
 
 {- ** LB 5.4 -}
 
@@ -98,10 +114,14 @@ getsPeople path = undefined
 -}
 
 randomListElement :: [a] -> IO a
-randomListElement xs = undefined
+randomListElement xs = do
+  i <- R.randomRIO (0, length xs - 1)
+  return $ xs !! i
 
 selectRandomPerson :: Map Int Person -> IO (Maybe Person)
-selectRandomPerson p = undefined
+selectRandomPerson p = do
+  rndInd <- randomListElement (M.keys p)  
+  return $ M.lookup rndInd p
 
 {- ** LB 5.5 -}
 
@@ -126,13 +146,16 @@ selectRandomPerson p = undefined
 data Battle = Battle {solvedTasks :: Int, mergeRequestName :: String} deriving (Show, Eq)
 
 notNegative :: Int -> Maybe Int
-notNegative n = undefined
+notNegative n = if (n<0) then Nothing else Just n
 
 notEmpty :: String -> Maybe String
-notEmpty s = undefined
+notEmpty s = if (null s) then Nothing else Just s
 
 validateBattle :: Battle -> Maybe Battle
-validateBattle b = undefined
+validateBattle b = if (solvedTasks b > 2 && mergeRequestName b == "level-5") then Just b else Nothing
 
 createBattle :: Int -> String -> Maybe Battle
-createBattle st' mrn' = undefined
+createBattle st' mrn' = do
+  notNegative st'
+  notEmpty mrn'
+  validateBattle (Battle st' mrn')
