@@ -275,8 +275,8 @@ Define the following functions within a 'Maybe' monad.
   
   
   
-> grandfathersPartnerForename :: Person -> Maybe String
-> grandfathersPartnerForename == mother p >>= mother >>= partner >>= return . forename
+-- > grandfathersPartnerForename :: Person -> Maybe String
+-- > grandfathersPartnerForename == mother p >>= mother >>= partner >>= return . forename
 
 1.2
 - Using 'Data.List.stripPrefix', define a function
